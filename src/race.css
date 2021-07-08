@@ -136,3 +136,5 @@ body { overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-
 #dialog-counter {
     font-size: 50px;
 }
+.dialog-tip { font-size: 13px; margin-top: 20px; }
+:is(.practice, .pvai) .dialog-tip { display: none; }

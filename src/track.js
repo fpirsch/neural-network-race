@@ -63,7 +63,7 @@ function toChroma (pixels) {
 }
 
 async function prepareSprites () {
-    const canvas = await loadImage('assets/mario-sprites.png')
+    const canvas = await loadImage('src/assets/mario-sprites.png')
     const context2d = canvas.getContext('2d')
     const imageData = context2d.getImageData(0, 0, canvas.width, canvas.height)
     toChroma(imageData.data)
@@ -235,7 +235,7 @@ function scanTrack (context2d) {
 
 export async function loadAndScanTrack (track, canvas) {
     if (track.startLine) return
-    canvas = await loadImage(`assets/${track.image}`, { skipTop: 76, canvas })
+    canvas = await loadImage(`src/assets/${track.image}`, { skipTop: 76, canvas })
     sprites = sprites || await prepareSprites()
     const trackGeometry = scanTrack(canvas.getContext('2d'))
     Object.assign(track, trackGeometry)
