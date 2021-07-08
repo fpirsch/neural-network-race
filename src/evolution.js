@@ -8,7 +8,7 @@ export function genetic ({
 
     let population = [...Array(populationSize)].map(
         () => {
-            const nn = createNN(6, [5], 4)
+            const nn = createNN(6, [3, 3], 4)
             randomInitNN(nn)
             return nn
         }
