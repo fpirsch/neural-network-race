@@ -1,0 +1,4 @@
+{
+    "//": "compat with es module imports, see https://nodejs.org/api/esm.html#esm_modules_ecmascript_modules",
+    "type": "module"
+}

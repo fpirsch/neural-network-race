@@ -1,0 +1,138 @@
+@import 'assets/icofont.min.css';
+body { overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #000; color: #fff; }
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.main {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: opacity 250ms ease;
+}
+.track {
+    position: relative;
+    margin: auto;
+    width: 1024px; /* ajuster aux dimensions de la map */
+    height: 1024px;
+    transform-origin: top center;
+    transform: scale(0.875); /* ajuster en responsive pour que ça rentre */
+}
+.track-star5 { background: bottom/100% no-repeat url("assets/SuperMarioKartMapStarCup5.png"); }
+.track-mushroom2 { background: bottom/100% no-repeat url("assets/SuperMarioKartMapMushroomCup2.png"); }
+.track-flower5 { background: bottom/100% no-repeat url("assets/SuperMarioKartMapFlowerCup5.png"); }
+
+.car, .tires { position: absolute; background: center no-repeat; transition: opacity 300ms ease; }
+.car-icon { display: inline-block; background: center no-repeat; padding: 3px; }
+.car-icon:not(.car-selected) { opacity: 0.8; }
+.car-red {
+    width: 23px;
+    height: 46px;
+    left: -11.5px;
+    top: -23px;
+    background-image: url("assets/car-red.png");
+}
+.car-green {
+    width: 23px;
+    height: 46px;
+    left: -11.5px;
+    top: -23px;
+    background-image: url("assets/car-green.png");
+}
+.car-blue {
+    width: 23px;
+    height: 46px;
+    left: -11.5px;
+    top: -23px;
+    background-image: url("assets/car-blue.png");
+}
+.car-yellow {
+    width: 23px;
+    height: 46px;
+    left: -11.5px;
+    top: -23px;
+    background-image: url("assets/car-yellow.png");
+}
+.car-orange {
+    width: 23px;
+    height: 46px;
+    left: -11.5px;
+    top: -23px;
+    background-image: url("assets/car-orange.png");
+}
+.car-redf1 {
+    width: 25px;
+    height: 59px;
+    left: -12.5px;
+    top: -29.5px;
+    background-image: url("assets/f1-red.png");
+}
+.car-red-tires {
+    width: 23px;
+    height: 46px;
+    left: -11.5px;
+    top: -23px;
+    background-image: url("assets/car-red-tires.png");
+}
+.car-dead { opacity: 0.25 }
+.car-selected { outline: 1px solid lightgreen; }
+.ai .car-debug { border: 1px solid black; }
+
+.osd {
+    width: 10em;
+    right: -11em;
+    transition: opacity 250ms ease;
+}
+/* .osd:hover { opacity: 0.2; } */
+.osd-speed {
+    text-align: right;
+    margin-right: 1em;
+}
+#speed-int {
+    font-size: 2em;
+    font-style: italic;;
+}
+.osd-table { width: 100%; }
+.osd-table td+td { text-align: right; }
+
+.ai .gen-controls { display: block !important; }
+.gen-controls {
+    left: 0;
+    width: 12em;
+    text-align: center;
+}
+.gen-controls-title { padding-bottom: 0.3em; }
+.gen-controls > i { font-size: 1.5em; color: lightgray; transition: color 250ms ease; padding: 0.1em; }
+.gen-controls > i:not(.disabled) { cursor: pointer; }
+.gen-controls > i:not(.disabled):hover { color: white; }
+.disabled {
+    opacity: 0.5;
+}
+
+.rays { position: absolute; top: 50%; left: 50%; width: 0; }
+.ray { position: absolute; width: 30px; height: 1px; background-color: yellow; transform-origin: left; }
+
+#track-image-data { position: absolute; top: 0; left: 6em; pointer-events: none; }
+
+.dialog.hidden { opacity: 0; }
+.dialog {
+    position: absolute;
+    width: 400px;
+    height: 180px;
+    top: 50%;
+    left: 50%;
+    margin-top: -120px;
+    margin-left: -200px;
+    border: 1px solid white;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    transition: opacity 500ms ease;
+}
+
+#dialog-counter {
+    font-size: 50px;
+}
