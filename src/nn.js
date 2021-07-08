@@ -1,27 +1,7 @@
 // Le réseau de neurones que j'ai fait pour codingame
+// ( https://www.codingame.com/training/hard/binary-neural-network---part-1 et https://www.codingame.com/training/expert/binary-neural-network---part-2 )
 // pas du tout optimisé, ni pratique, mais il marche
 // vaguement modifié pour l'occasion (initialisation des poids, fonction d'activation)
-// https://stats.stackexchange.com/questions/362461/is-it-better-to-avoid-relu-as-activation-function-if-input-data-has-plenty-of-ne
-
-/*
-Structure
-
-https://github.com/GentlemenClub/MarioAI
-=> Bent Identity (leaky relu dérivable ? je pourrais prendre une leaky relu)
-
-    1 Input layer of 502 neurons, using reLU as activation function. => parce qu'il y a pas de négatifs ?
-    2 Hidden layer respectively of 250 and 125 neurons, using Bent identity as activation function.
-    1 Output layer of 32 neurons, using Bent Identity as activation function.
-        => comment interpréter le résultat en "appuyé ou pas" ? Comprend pas. Ils disent utiliser > mais je le comprends probablement mal.
-        (c'est les q-values des différentes actions, aucune idée de ce que ça veut dire)
-
-At each time t, the agent score is calculated as follows:
-Score = Level Position + Mario Status + Mario Mode + Enemies Killed + Coins Collected
-
-évolution : on peut mettre une proba d'ajouter ou supprimer un neurone caché
-activation : silu au lieu de relu, dsilu au lieu de sigmoid... ouuuuuf
-
-*/
 
 export function create (inputs, hiddenLayers, outputs) {
     const w = new Array(hiddenLayers.length + 1)
