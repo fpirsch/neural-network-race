@@ -3,7 +3,7 @@ import { makeCar, frontBumper, placeCar, updateCarLap, changeModel } from './car
 import { setCarAI, AI } from './nn.js'
 import { updateCar } from './physics.js'
 import { genetic } from './evolution.js'
-import { initDisplay, displayAsSelected, updateControls, updateDisplay, updateCarModelDisplay, updateCarSprite, resetDisplay, toggleRadar, displayForDebug } from './ui.js'
+import { initDisplay, displayAsSelected, updateControls, updateDisplay, updateCarModelDisplay, updateCarSprite, responsive, resetDisplay, toggleRadar, displayForDebug } from './ui.js'
 import animate from './animate.js'
 
 const MAX_GENERATIONS = 200
@@ -11,12 +11,12 @@ const MAX_TIME_BEFORE_NEXT_GEN = 60 // secondes, uniquement si un tour complet a
 const GAME_MODE_PRACTICE = 1
 const GAME_MODE_AI = 2
 const GAME_MODE_PVAI = 3
-
+const STUCK_DELAY = 3000 // en ms
 
 const trackEl = document.getElementsByClassName('track')[0]
 const mainScreen = document.getElementsByClassName('main')[0]
 const navScreen = document.getElementsByTagName('nav')[0]
-const canvas = document.getElementById('track-image-data')
+const canvasEl = document.getElementById('track-image-data')
 const dialog = {
     container: document.getElementsByClassName('dialog')[0],
     title: document.getElementById('dialog-title'),
@@ -51,7 +51,7 @@ const routes = {
         mainScreen.className = 'hidden'
         navScreen.className = ''
     },
-    canvas () { canvas.classList.toggle('hidden') },
+    canvas () { canvasEl.classList.toggle('hidden') },
     radar () { radarOn = toggleRadar() },
     'control-previous': () => animation?.stop('previous'),
     'control-play': () => animation?.pauseResume(),
@@ -71,6 +71,10 @@ const keyboard = { up: 0, down: 0, left: 0, right: 0 };
 [...document.querySelectorAll('[data-route]')].forEach(
     elt => elt.addEventListener('click', evt => evt.preventDefault(routes[elt.dataset.route]?.(evt)), true)
 )
+window.addEventListener('keydown', onKeydown, true)
+window.addEventListener('keyup', onKeyup, true)
+
+responsive(trackEl, canvasEl)
 
 function showCountdown (message) {
     dialog.title.textContent = message
@@ -125,28 +129,30 @@ function onModelClick (event) {
 
 function onKeydown (event) {
     switch (event.key) {
+        case 'R': case 'r': routes.radar(); break
+        case 'C': case 'c': routes.canvas(); break
+        case ' ': animation.pauseResume(); break
+    }
+    if (gameMode !== GAME_MODE_PRACTICE && gameMode !== GAME_MODE_PVAI) return
+    switch (event.key) {
         case 'ArrowUp': keyboard.up = 1; break
         case 'ArrowDown': keyboard.down = 1; break
         case 'ArrowLeft': keyboard.left = 1; break
         case 'ArrowRight': keyboard.right = 1; break
-        case ' ': animation.pauseResume(); break
         default: return
     }
     event.preventDefault()
 }
 
 function onKeyup (event) {
+    if (gameMode !== GAME_MODE_PRACTICE && gameMode !== GAME_MODE_PVAI) return
     switch (event.key) {
         case 'ArrowUp': keyboard.up = 0; break
         case 'ArrowDown': keyboard.down = 0; break
         case 'ArrowLeft': keyboard.left = 0; break
         case 'ArrowRight': keyboard.right = 0; break
-        case 'R': case 'r': routes.radar(); break
-        case 'C': case 'c': routes.canvas(); break
     }
 }
-
-const STUCK_DELAY = 3000 // en ms
 
 function updateCarDist (car, track, time, dt,i) {
     const front = frontBumper(car)
@@ -204,13 +210,11 @@ async function startPractice () {
     car.ai = null;
     initDisplay(cars, track, trackEl)
     selectCarForDebug(0)
-    await loadAndScanTrack(track, canvas)
+    await loadAndScanTrack(track, canvasEl)
     placeCar (car, track, 0)
     // reset la position de la car si elle est réutilisée d'un ancienne course
     updateDisplay(cars, track)
     try { await showCountdown('Get ready !') } catch (e) { return }
-    window.addEventListener('keydown', onKeydown, true)
-    window.addEventListener('keyup', onKeyup, true)
     animation = animate(nextFrame)
     animation.play()
 }
@@ -218,8 +222,6 @@ async function startPractice () {
 function stopPractice () {
     if (gameMode === GAME_MODE_PRACTICE) {
         animation?.stop()
-        window.removeEventListener('keydown', onKeydown, true)
-        window.removeEventListener('keyup', onKeyup, true)
         gameMode = undefined
     }
 }
@@ -235,7 +237,7 @@ async function startTraining () {
     window.cars = cars
     window.evol = evol
     initDisplay(cars, track, trackEl)
-    await loadAndScanTrack(track, canvas)
+    await loadAndScanTrack(track, canvasEl)
     setCarsAI(cars, evol)
     // reset les positions d'anciennes voitures potentiellement visibles
     cars.forEach((car, i) => placeCar(car, track, i % 8))
@@ -293,13 +295,13 @@ async function startPvAI () {
         setCarAI(cars[i], pick(AI).nn)
     }
     initDisplay(cars, track, trackEl)
-    await loadAndScanTrack(track, canvas)
+    displayAsSelected(cars[0]) // select player
+    await loadAndScanTrack(track, canvasEl)
     // reset les positions d'anciennes voitures potentiellement visibles
     cars.forEach((car, i) => placeCar(car, track, i))
     updateDisplay(cars, track)
     try { await showCountdown('Get ready !') } catch (e) { return }
-    window.addEventListener('keydown', onKeydown, true)
-    window.addEventListener('keyup', onKeyup, true)
+    displayAsSelected(cars[0], false)
     animation = animate(nextFrame)
     animation.play()
 }
@@ -307,8 +309,6 @@ async function startPvAI () {
 function stopPvAI () {
     if (gameMode === GAME_MODE_PVAI) {
         animation?.stop()
-        window.removeEventListener('keydown', onKeydown, true)
-        window.removeEventListener('keyup', onKeyup, true)
         gameMode = undefined
     }
 }

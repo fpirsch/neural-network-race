@@ -14,6 +14,19 @@ const timeFormat = ms => (Math.round(ms / 10) / 100).toFixed(2)
 
 let debuggedCar, debuggedCarIndex
 
+export function responsive (...elements) {
+    const container = document.getElementsByTagName('section')[0]
+
+    const adjustHeight = () => {
+        const bbox = container.getBoundingClientRect()
+        const dim = Math.min(bbox.width, bbox.height)
+        elements.forEach(el => el.style.transform = `scale(${dim / 1024})`)
+    }
+
+    adjustHeight()
+    window.addEventListener('resize', adjustHeight)
+}
+
 // on utilise toujours le même sprite de pneus, c'est pas fou
 function initDriftDisplay (trackEl) {
     if (driftSprites.length === 0) {
@@ -123,7 +136,6 @@ function displayCar (car, track, time) {
     const carScale = track.pxPerM / car.pxPerM
     const transform = `translate(${x}px,${y}px) rotate(${angle}rad)`
 
-    if (displayConfig.rays) displayRays(car, track.pxPerM)
     car.div.style.transform = transform
     car.div.style.backgroundSize = `${carScale*100}%`
     if (car.drifting) addDriftSprite(transform, x, y, time)
@@ -137,9 +149,9 @@ export function updateCarSprite (car, oldCss) {
     cl.add(car.css)
 }
 
-export function displayAsSelected (car) {
+export function displayAsSelected (car, isSelected = true) {
     car.div.classList.remove('car-dead')
-    car.div.classList.add('car-selected')
+    car.div.classList.toggle('car-selected', isSelected)
 }
 
 export function displayForDebug (car, carIndex) {
@@ -245,6 +257,7 @@ export function updateCarModelDisplay (car) {
 
 export function updateDisplay (cars, track, time = 0, osdCar = START_OSD_CAR) {
     cars.forEach(car => displayCar(car, track, time))
+    if (displayConfig.rays) displayRays(cars[0], track.pxPerM)
     updateDrifts(time)
     updateOSD(osdCar, time)
     updateDebug(debuggedCar)

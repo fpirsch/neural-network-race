@@ -11,12 +11,11 @@ body { overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-
     transition: opacity 250ms ease;
 }
 .track {
-    position: relative;
-    margin: auto;
+    position: absolute;
+    left: calc(50% - 512px);
+    top: calc(50% - 512px);
     width: 1024px; /* ajuster aux dimensions de la map */
     height: 1024px;
-    transform-origin: top center;
-    transform: scale(0.875); /* ajuster en responsive pour que ça rentre */
 }
 .track-star5 { background: bottom/100% no-repeat url("assets/SuperMarioKartMapStarCup5.png"); }
 .track-mushroom2 { background: bottom/100% no-repeat url("assets/SuperMarioKartMapMushroomCup2.png"); }
