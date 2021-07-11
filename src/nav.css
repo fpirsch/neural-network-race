@@ -84,7 +84,7 @@ code {
 .close {
     position: absolute;
     top: 1em;
-    right: 1em;
+    right: 7em;
     padding: 0.25em;
     cursor: pointer;
     color: #aaa;
