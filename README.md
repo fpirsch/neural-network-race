@@ -34,7 +34,7 @@ It takes a few more generations to master a much faster car.
 
 ## Getting technical
 
-## Physics engine
+### Physics engine
 
 Basic 2D integrating position from acceleration and drag force. Collision detection only with walls and lawn.
 
